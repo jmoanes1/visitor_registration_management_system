@@ -13,7 +13,36 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+// Single-domain deployment: browsers send no cross-origin requests in production,
+// so only same-origin plus an optional explicit allowlist is accepted.
+const allowedOrigins = new Set(
+  (process.env.CORS_ALLOWED_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean)
+);
+
+const isSameOrigin = (origin, request) => {
+  try {
+    return new URL(origin).host === request.headers.host;
+  } catch {
+    return false;
+  }
+};
+
+const corsDelegate = (req, callback) => {
+  const { origin } = req.headers;
+
+  if (!origin) return callback(null, { origin: false });
+
+  const isProduction = process.env.NODE_ENV === 'production';
+  const allowed = !isProduction || allowedOrigins.has(origin) || isSameOrigin(origin, req);
+
+  callback(null, { origin: allowed ? origin : false, credentials: false });
+};
+
+app.use(cors(corsDelegate));
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);

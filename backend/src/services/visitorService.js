@@ -22,7 +22,7 @@ const createVisitor = (visitorData) => {
 
   const maxRef =
     visitors.length > 0
-      ? Math.max(...visitors.map((v) => parseInt(v.referenceNumber.split('-')[3])))
+      ? Math.max(...visitors.map((v) => parseInt(v.referenceNumber.split('-')[2])))
       : 0;
   const newReferenceNumber = `VS-2026-${String(maxRef + 1).padStart(6, '0')}`;
 

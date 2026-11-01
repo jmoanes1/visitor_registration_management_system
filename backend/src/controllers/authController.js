@@ -1,4 +1,4 @@
-import { authenticateUser } from '../services/authService.js';
+import { authenticateUser, issueToken } from '../services/authService.js';
 
 const login = (req, res) => {
   const { email, password } = req.body;
@@ -18,8 +18,8 @@ const login = (req, res) => {
 
   res.json({
     success: true,
-    message: 'Login successful (mock authentication)',
-    token: 'dev-mock-token',
+    message: 'Login successful',
+    token: issueToken(user),
     user,
   });
 };
@@ -35,10 +35,10 @@ const me = (req, res) => {
   res.json({
     success: true,
     user: {
-      id: 'u-001',
-      email: 'admin@visitorreg.com',
-      name: 'Admin User',
-      role: 'Administrator',
+      id: req.auth.sub,
+      email: req.auth.email,
+      name: req.auth.name,
+      role: req.auth.role,
     },
   });
 };
