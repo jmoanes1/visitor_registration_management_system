@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'node:path';
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 import authRoutes from './routes/authRoutes.js';
 import visitorRoutes from './routes/visitorRoutes.js';
@@ -12,6 +15,12 @@ import errorHandler from './middleware/errorHandler.js';
 dotenv.config();
 
 const app = express();
+
+const clientDist = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../../frontend/dist'
+);
+const hasClientBuild = existsSync(clientDist);
 
 // Single-domain deployment: browsers send no cross-origin requests in production,
 // so only same-origin plus an optional explicit allowlist is accepted.
@@ -45,11 +54,25 @@ app.use(cors(corsDelegate));
 
 app.use(express.json());
 
+app.get('/api/health', (req, res) => {
+  res.json({ success: true, status: 'ok', uptime: process.uptime() });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/visitors', visitorRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/users', staffRoutes);
+
+// One-service deployment: the same process that answers /api also serves the
+// built SPA, so the frontend keeps using relative /api requests.
+if (hasClientBuild) {
+  app.use(express.static(clientDist, { index: false, maxAge: '1h' }));
+
+  app.get(/^(?!\/api(?:\/|$)).*/, (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
 
 app.use(errorHandler);
 

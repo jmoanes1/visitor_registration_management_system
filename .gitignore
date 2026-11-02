@@ -15,9 +15,6 @@ yarn-error.log*
 frontend/dist/
 backend/build/
 
-# Vercel
-.vercel/
-
 # OS files
 .DS_Store
 Thumbs.db

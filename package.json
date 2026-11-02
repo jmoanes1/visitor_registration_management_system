@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Visitor Registration System - React.js + Tailwind CSS + Node.js + Express.js with mock data",
   "private": true,
-  "type": "module",
   "engines": {
     "node": ">=20.0.0"
   },
