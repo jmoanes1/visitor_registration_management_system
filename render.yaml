@@ -5,6 +5,15 @@
 # Dashboard: New + -> Blueprint -> connect this repository.
 # JWT_SECRET and ADMIN_PASSWORD are marked sync:false, so Render asks you to
 # enter them once in the dashboard and never stores the values in this file.
+#
+# If you configure the service by hand instead of using this blueprint, these are
+# the values it stands for:
+#   Runtime          Node
+#   Root Directory   (leave empty - the repository root, not "frontend")
+#   Build Command    npm ci --prefix backend && npm ci --prefix frontend && npm run build --prefix frontend
+#   Start Command    node backend/src/server.js
+#   Publish Directory  not used: a web service serves frontend/dist itself
+#   Health Check Path  /api/health
 services:
   - type: web
     name: visitor-registration
@@ -12,8 +21,14 @@ services:
     plan: free
     region: singapore
     branch: main
-    # NODE_ENV=production makes npm omit devDependencies, but vite is one of them.
-    buildCommand: npm ci --include=dev --prefix backend && npm ci --include=dev --prefix frontend && npm run build --prefix frontend
+    # Root Directory stays the repository root because this one process serves
+    # both the SPA and /api.
+    #
+    # No --include=dev: Render sets NODE_ENV=production, so npm skips
+    # devDependencies. vite, @vitejs/plugin-react, tailwindcss and autoprefixer
+    # are therefore declared in frontend/package.json "dependencies" - otherwise
+    # the build fails with "sh: 1: vite: not found".
+    buildCommand: npm ci --prefix backend && npm ci --prefix frontend && npm run build --prefix frontend
     startCommand: node backend/src/server.js
     healthCheckPath: /api/health
     autoDeploy: true
