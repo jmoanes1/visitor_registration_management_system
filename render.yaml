@@ -9,10 +9,10 @@
 # If you configure the service by hand instead of using this blueprint, these are
 # the values it stands for:
 #   Runtime          Node
-#   Root Directory   (leave empty - the repository root, not "frontend")
-#   Build Command    npm ci --prefix backend && npm ci --prefix frontend && npm run build --prefix frontend
-#   Start Command    node backend/src/server.js
-#   Publish Directory  not used: a web service serves frontend/dist itself
+#   Root Directory   (leave empty - the repository root)
+#   Build Command    npm ci --include=dev && npm run build
+#   Start Command    npm start
+#   Publish Directory  not used: this service serves dist/ itself
 #   Health Check Path  /api/health
 services:
   - type: web
@@ -24,12 +24,12 @@ services:
     # Root Directory stays the repository root because this one process serves
     # both the SPA and /api.
     #
-    # No --include=dev: Render sets NODE_ENV=production, so npm skips
-    # devDependencies. vite, @vitejs/plugin-react, tailwindcss and autoprefixer
-    # are therefore declared in frontend/package.json "dependencies" - otherwise
-    # the build fails with "sh: 1: vite: not found".
-    buildCommand: npm ci --prefix backend && npm ci --prefix frontend && npm run build --prefix frontend
-    startCommand: node backend/src/server.js
+    # --include=dev is required: Render sets NODE_ENV=production, which makes npm
+    # skip devDependencies - and vite, @vitejs/plugin-react, tailwindcss and
+    # autoprefixer live there. Without the flag the build fails with
+    # "sh: 1: vite: not found".
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:

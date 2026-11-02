@@ -11,15 +11,14 @@ yarn-error.log*
 .env.production
 .env.test
 
-# Build outputs
-frontend/dist/
-backend/build/
+# Build output
+dist/
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# IDE
+# Editors
 .vscode/
 .idea/
 *.swp
@@ -29,10 +28,7 @@ Thumbs.db
 logs/
 *.log
 
-# Database
+# Databases
 *.db
 *.sqlite
 *.sqlite3
-
-# Mock data (temporary)
-data/mockVisitors.json
