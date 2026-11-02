@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertCircle, ArrowRight, Eye, EyeOff, Lock, Mail, ShieldCheck } from 'lucide-react';
+import { AlertCircle, ArrowRight, Eye, EyeOff, Lock, ShieldCheck, User } from 'lucide-react';
 import { useAuth } from '@/context/AuthProvider.jsx';
 import { APP_VERSION } from '@/config/app.js';
 import { TextField } from '@/components/FormFields.jsx';
 import { apiErrorMessage } from '@/utils/apiError.js';
 
-const emptyCredentials = { email: '', password: '' };
+const emptyCredentials = { username: '', password: '' };
 
 const LoginPage = () => {
   const [credentials, setCredentials] = useState(emptyCredentials);
@@ -26,7 +26,7 @@ const LoginPage = () => {
     setServerError('');
 
     const nextErrors = {};
-    if (!credentials.email) nextErrors.email = 'Email is required';
+    if (!credentials.username) nextErrors.username = 'Username is required';
     if (!credentials.password) nextErrors.password = 'Password is required';
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
@@ -67,17 +67,17 @@ const LoginPage = () => {
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-5" noValidate>
           <TextField
-            id="email"
-            name="email"
-            label="Email Address"
-            type="email"
+            id="username"
+            name="username"
+            label="Username"
+            type="text"
             required
-            icon={Mail}
+            icon={User}
             autoComplete="username"
-            placeholder="you@company.com"
-            value={credentials.email}
-            onChange={updateField('email')}
-            error={errors.email}
+            placeholder="admin"
+            value={credentials.username}
+            onChange={updateField('username')}
+            error={errors.username}
           />
 
           <TextField

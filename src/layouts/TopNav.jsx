@@ -77,7 +77,7 @@ const TopNav = ({ isSidebarOpen, setIsSidebarOpen }) => {
               <div className="absolute right-0 mt-1.5 w-52 bg-white rounded-xl shadow-card border border-[#E2E8F0] py-1.5 z-50">
                 <div className="px-4 py-2 border-b border-[#E2E8F0]">
                   <p className="text-xs font-bold text-[#0F172A] truncate">{user?.name}</p>
-                  <p className="text-[11px] text-[#64748B] truncate">{user?.email}</p>
+                  <p className="text-[11px] text-[#64748B] truncate">{user?.username}</p>
                 </div>
                 <button
                   type="button"

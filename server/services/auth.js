@@ -15,21 +15,21 @@ const isSameSecret = (provided, expected) => {
 const missingConfiguration = (keys) =>
   httpError(500, `Authentication is not configured: missing ${keys.join(', ')}`);
 
-const authenticate = (email, password) => {
-  const { email: expectedEmail, password: expectedPassword } = config.admin;
+const authenticate = (username, password) => {
+  const { username: expectedUsername, password: expectedPassword } = config.admin;
 
   const missingKeys = [];
-  if (!expectedEmail) missingKeys.push('ADMIN_EMAIL');
+  if (!expectedUsername) missingKeys.push('ADMIN_USERNAME');
   if (!expectedPassword) missingKeys.push('ADMIN_PASSWORD');
   if (missingKeys.length > 0) throw missingConfiguration(missingKeys);
 
-  const emailMatches = isSameSecret(email, expectedEmail);
+  const usernameMatches = isSameSecret(username, expectedUsername);
   const passwordMatches = isSameSecret(password, expectedPassword);
-  if (!emailMatches || !passwordMatches) return null;
+  if (!usernameMatches || !passwordMatches) return null;
 
   return {
     id: 'u-001',
-    email: expectedEmail,
+    username: expectedUsername,
     name: config.admin.name,
     role: 'Administrator',
   };
@@ -41,7 +41,7 @@ const issueToken = (user) => {
   return jwt.sign(
     {
       sub: user.id,
-      email: user.email,
+      username: user.username,
       name: user.name,
       role: user.role,
       jti: crypto.randomUUID(),

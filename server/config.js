@@ -23,7 +23,7 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || '',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '8h',
   admin: {
-    email: process.env.ADMIN_EMAIL || process.env.ADMIN_USERNAME || '',
+    username: process.env.ADMIN_USERNAME || '',
     password: process.env.ADMIN_PASSWORD || '',
     name: process.env.ADMIN_NAME || 'Admin User',
   },
