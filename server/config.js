@@ -23,7 +23,9 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || '',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '8h',
   admin: {
-    username: process.env.ADMIN_USERNAME || '',
+    // The username is not a secret, so it has a working default and only the
+    // password stays required configuration.
+    username: process.env.ADMIN_USERNAME?.trim() || 'admin',
     password: process.env.ADMIN_PASSWORD || '',
     name: process.env.ADMIN_NAME || 'Admin User',
   },

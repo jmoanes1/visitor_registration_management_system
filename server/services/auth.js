@@ -18,10 +18,7 @@ const missingConfiguration = (keys) =>
 const authenticate = (username, password) => {
   const { username: expectedUsername, password: expectedPassword } = config.admin;
 
-  const missingKeys = [];
-  if (!expectedUsername) missingKeys.push('ADMIN_USERNAME');
-  if (!expectedPassword) missingKeys.push('ADMIN_PASSWORD');
-  if (missingKeys.length > 0) throw missingConfiguration(missingKeys);
+  if (!expectedPassword) throw missingConfiguration(['ADMIN_PASSWORD']);
 
   const usernameMatches = isSameSecret(username, expectedUsername);
   const passwordMatches = isSameSecret(password, expectedPassword);
